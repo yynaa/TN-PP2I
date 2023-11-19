@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: seagreen;
+    min-height: 100vh;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-image: url('city-logo.jpg');
+}
+
+.loginwindow {
+    background-color: lightgreen;
+    width: 420px;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: #fff;
+    background: transparent;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.loginwindow h1 {
+    font-size: 36px;
+    text-align: center;
+    color: #333;
+}
+
+
+
