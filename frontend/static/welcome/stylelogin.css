@@ -60,14 +60,14 @@ header {
     color: gray;
 }
 
-.inputbox img[src="user_logo.png"] {
+.inputbox img[src$="user_logo.png"] {
     position: relative;
     left: 86%;
     top: -42px;
     font-size: 20px;
 }
 
-.inputbox img[src="padlock_logo.png"] {
+.inputbox img[src$="padlock_logo.png"] {
     position: relative;
     left: 86%;
     top: -30px;
@@ -75,12 +75,27 @@ header {
     font-size: 20px;
 }
 
-.inputbox img[src="mail_logo.png"] {
-    position: relative;
-    left: 86%;
-    top: -30px;
-    transform: translateY(-50%);
-    font-size: 20px;
+.loginwindow .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+    font-size: 13px;
+    color: #333;
+}
+
+.remember-forgot label input {
+    accent-color: #333;
+    margin-right: 3px;
+}
+
+.remember-forgot a {
+    color: #333;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
 }
 
 .loginwindow .btn {
@@ -97,4 +112,21 @@ header {
     font-weight: 600;
 }
 
+.loginwindow .register-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+    color: gray;
+}
+
+.register-link p a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    color: gray;
+}
+
+.register-link p a:hover {
+    text-decoration: underline;
+}
 
