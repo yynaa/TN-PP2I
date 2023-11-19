@@ -2,10 +2,6 @@ from flask import Flask, render_template
 import folium
 import sys
 
-#i hate python
-sys.path.append('../')
-print
-
 from backend.db.functions import fetch_Data
 
 app = Flask(__name__)
