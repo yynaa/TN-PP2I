@@ -1,4 +1,12 @@
 from flask import Flask, render_template
+import folium
+import sys
+
+#i hate python
+sys.path.append('../')
+print
+
+from backend.db.functions import fetch_Data
 
 app = Flask(__name__)
 
@@ -11,15 +19,16 @@ def mapLoader():
     """
     Loads the map page
     """
-    return render_template('map.html')
+    m = folium.Map(location=[48.689, 6.2], zoom_start=13)
 
-@app.route('/api/buildings')
-def getMapData():
-    """
-    Returns the map data
-    """
-    # this is test data
-    return []
+    for building in fetch_Data("backend/db/database.db", "Buildings"):
+        folium.Marker(
+            location=[building["GPS_lat"], building["GPS_long"]],
+            popup=building["building_name"],
+            icon=folium.Icon(color='red', icon='info-sign')
+        ).add_to(m)
+
+    return m.get_root().render()
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=True)
