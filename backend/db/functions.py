@@ -69,6 +69,103 @@ def fetch_Data(db_path:str,table_name:str)->list[dict]:
 
     return returned_list
 
+def fetch_Data_buildings(db_path:str,building_id:int)->dict:
+    """Quite similar to the fetch_Data function. Returns the dictionnary registering
+    all the information about the given building.
+    Note: this function only works for the 'Buildings' table.
+
+    Args:
+        db_path (str): Path of the database.
+        building_id (int): ID of the building you want information about.
+
+    Returns:
+        dict: dictionnary registering all the information about the given building :
+                keys = names of the column, values = the attribute values.
+        If there is no building named after the given name in the given database,
+            the function returns the empty dictionnary.
+    """
+
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    select_query = "SELECT * FROM Buildings WHERE building_id = " + str(building_id)
+    cursor.execute(select_query)
+    content = cursor.fetchall()
+
+    if content == []:
+        return {}
+
+    element_to_return = content[0]
+    dictionnary = {}
+    for i in range(len(element_to_return)):
+        dictionnary[columns_names_buildings[i]] = element_to_return[i]
+
+    connexion.close()
+
+    return dictionnary
+
+# -------------------------------------------------------------------
+
+def building_search_byname(db_path:str,building_name:str,GPS_lat:float,GPS_long:float,number_of_instances=10)->list[int]:
+    """Returns the list of the id of the buildings whose name contains the given building_name, sorted by distance from
+    the given GPS coordinates. The maximum size of the list can be modified, but its default value is 10.
+
+    Args:
+        db_path (str): Path of the database.
+        building_name (str): Name of the building(s) you want.
+        GPS_lat (float): Latitude of the origin (used to sort the locations by distance).
+        GPS_long (float): Longitude of the origin (used to sort the locations by distance).
+        number_of_instances (int, optional): Number of instances in the final list. Defaults to 10.
+
+    Returns:
+        list[int]: List of the id of the buildings whose name contains the given building_name, sorted
+                by distance from the given GPS coordinates.
+    """
+
+    def building_search_byname(db_path:str,building_name:str)->list[int]:
+        connexion = sqlite3.connect(db_path)
+        cursor = connexion.cursor()
+
+        all_buildings = fetch_Data(db_path,'Buildings')
+        returned_list = []
+
+        for building in all_buildings:
+            if building_name in building['building_name']:
+                returned_list.append(building['building_id'])
+        
+        connexion.close()
+
+        return returned_list
+
+    search_by_name = building_search_byname(db_path,building_name)
+    search_by_name_unsorted = []
+    for build_id in search_by_name:
+        building_fullinfo = fetch_Data_buildings(db_path,build_id)
+        lat,long = building_fullinfo['GPS_lat'],building_fullinfo['GPS_long']
+        distance_to_origin = sqrt((lat-GPS_lat)**2+(long-GPS_long)**2)
+        search_by_name_unsorted.append([build_id,distance_to_origin])
+
+    # Tri
+    search_by_name_sorted = search_by_name_unsorted[:]
+    left,right = 0,len(search_by_name_sorted)-1
+    for i in range(left+1,right+1):
+        key_item = search_by_name_sorted[i]
+        j = i-1
+        while j >= left and search_by_name_sorted[j][1] > key_item[1]:
+            search_by_name_sorted[j+1] = search_by_name_sorted[j]
+            j -=1
+        search_by_name_sorted[j+1] = key_item
+
+    if number_of_instances < len(search_by_name_sorted):
+        maximum_length = number_of_instances
+    else:
+        maximum_length = len(search_by_name_sorted)
+    returned_list_with_sizelimit = []
+    for i in range(maximum_length):
+        returned_list_with_sizelimit.append(search_by_name_sorted[i][0])
+
+    return returned_list_with_sizelimit
+
 # -------------------------------------------------------------------
 
 def nearest_building(db_path:str,building_name:str)->str:
@@ -111,26 +208,63 @@ def nearest_building(db_path:str,building_name:str)->str:
 
 # -------------------------------------------------------------------
 
+def create_User(db_path:str,login:str,email:str,password:str,display_name:str,year:int,month:int,day:int)->bool:
+    """Create a User using the given information. For the account to be created, the database must not already have
+        an account with the given login, nor the given email (these are primary keys).
+
+    Args:
+        db_path (str): Path of the database.
+        login (str): Login of the User (must be unique in the table).
+        email (str): Email of the User (must be unique in the table).
+        password (str): Password of the User.
+        display_name (str): Display name of the User.
+        year (int): Year of creation of the account.
+        month (int): Month of creation of the account.
+        day (int): Day of creation of the account.
+
+    Returns:
+        bool: Did the function successfully create the account?
+    """
+
+    users_db = fetch_Data(db_path,'Users')
+    login_email_found = False
+    for i in users_db:
+        if i['login'] == login or i['email'] == email:
+            login_email_found = True
+    if login_email_found:
+        return False
+
+    date = str(year) + "/" + str(month) + "/" + str(day)
+    request = "INSERT INTO Users VALUES ('" + login + "','" + email + "','" + password + "','" + display_name + "','" + date + "');"
+
+    run_query(db_path,request)
+
+    return True
+
+# -------------------------------------------------------------------
+
 if __name__ == "__main__":
 
     db_path = "database.db"
 
-    run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Mairie','     ',45.4,60.1,100);")
+    run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Mairie','Nancy',45.4,60.1,100);")
     run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Gym','        ',145.6,60.9,100);")
     run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('College','    ',44.6,159.2,100);")
     run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Tour','       ',40.6,160.9,100);")
     run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Chateau','    ',45.6,64.9,100);")
+    run_query(db_path,"INSERT INTO Buildings (building_name,address,GPS_lat,GPS_long,evaluation) VALUES ('Mairie','Maîche',0,160.1,100);")
 
+    run_query(db_path, "INSERT INTO Users (login,email,password,display_name,creation_date) VALUES ('albert','albertdu95@tamereenshort.com','1234','Albert Dantamèr','2023/11/19');")
 
-    # print(fetch_Data(db_path,'Buildings'))
-    print(nearest_building(db_path,'Mairie'))
+    print(create_User(db_path,'alber','albertdu95@tamereenshort.com','azerty_vivelasecurite','Jean Paul Rouve',2023,11,19))
+
+    run_query(db_path,"DELETE FROM Users WHERE login = 'albert';")
+    run_query(db_path,"DELETE FROM Users WHERE login = 'Onyx';")
 
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Mairie';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Gym';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'College';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Tour';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Chateau';")
-    # print(fetch_Data(db_path,'Buildings'))
-
 
     pass
