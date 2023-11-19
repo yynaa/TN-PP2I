@@ -104,6 +104,41 @@ def fetch_Data_buildings(db_path:str,building_id:int)->dict:
 
     return dictionnary
 
+def fetch_Data_user(db_path:str,user_login:str)->dict:
+    """Quite similar to the fetch_Data function. Returns the dictionnary registering
+    all the information about the given User.
+    Note: this function only works for the 'Users' table.
+
+    Args:
+        db_path (str): Path of the database.
+        user_login (str): Login of the User you want information about.
+
+    Returns:
+        dict: dictionnary registering all the information about the given user :
+                keys = names of the column, values = the attribute values.
+        If there is no user named after the given login in the given database,
+            the function returns the empty dictionnary.
+    """
+
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    select_query = "SELECT * FROM Users WHERE login = '" + user_login + "';"
+    cursor.execute(select_query)
+    content = cursor.fetchall()
+
+    if content == []:
+        return {}
+
+    element_to_return = content[0]
+    dictionnary = {}
+    for i in range(len(element_to_return)):
+        dictionnary[columns_names_users[i]] = element_to_return[i]
+
+    connexion.close()
+
+    return dictionnary
+
 # -------------------------------------------------------------------
 
 def building_search_byname(db_path:str,building_name:str,GPS_lat:float,GPS_long:float,number_of_instances=10)->list[int]:
@@ -208,7 +243,7 @@ def nearest_building(db_path:str,building_name:str)->str:
 
 # -------------------------------------------------------------------
 
-def create_User(db_path:str,login:str,email:str,password:str,display_name:str,year:int,month:int,day:int)->bool:
+def create_User(db_path:str,login:str,email:str,password:str,display_name:str,year:int,month:int,day:int)->list:
     """Create a User using the given information. For the account to be created, the database must not already have
         an account with the given login, nor the given email (these are primary keys).
 
@@ -223,23 +258,91 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
         day (int): Day of creation of the account.
 
     Returns:
-        bool: Did the function successfully create the account?
+        list: [bool , str if needed]: Did the function successfully create the account? If not, why?
     """
 
     users_db = fetch_Data(db_path,'Users')
-    login_email_found = False
+    login_found,email_found = False,False
     for i in users_db:
-        if i['login'] == login or i['email'] == email:
-            login_email_found = True
-    if login_email_found:
-        return False
+        if i['login'] == login:
+            login_found = True
+        if i['email'] == email:
+            email_found = True
+    if login_found:
+        return [False, "There is already an account with this login."]
+    if email_found:
+        return [False, "There is already an account with this email."]
 
     date = str(year) + "/" + str(month) + "/" + str(day)
     request = "INSERT INTO Users VALUES ('" + login + "','" + email + "','" + password + "','" + display_name + "','" + date + "');"
 
     run_query(db_path,request)
 
-    return True
+    return [True]
+
+def check_password(db_path:str,login:str,given_password:str)->list:
+    """Updates the password of the given login. The new password must be different
+        from the old one.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User.
+        given_password (str): Password the function will compare to the real password of the given User.
+
+    Returns:
+        list: [bool , str if needed]: Is it the right password? If not, is it because there is no such account,
+            or because the password is wrong?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    if user_data == {}:
+        return [False, "There is no account with this login."]
+
+    if given_password == user_data['password']:
+        return [True]
+    return [False, "The given password isn't the true password of the account."]
+
+def update_password(db_path:str,login:str,newPassword:str)->list:
+    """Updates the password of the given login. The new password must be different
+        from the old one.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User.
+        newPassword (str): New password of the User (must be different from the old one).
+
+    Returns:
+        list: [bool , str if needed]: Did the function successfully create the account? If not, why?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    if user_data == {}:
+        return [False, "There is no account with this login."]
+    if newPassword == user_data['password']:
+        return [False, "The old password and the new one are the same."]
+
+    run_query(db_path,"UPDATE Users SET password = '" + newPassword + "' WHERE login = '" + login + "';")
+
+    return [True]
+
+def remove_User(db_path:str,login:str)->list:
+    """Removes the given User from the database.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User you want to remove.
+
+    Returns:
+        list: [bool , str if needed]: Did the function successfully create the account? If not, why?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    if user_data == {}:
+        return [False, "There is no account with this login."]
+    
+    run_query(db_path,"DELETE FROM Users WHERE login = '" + login + "';")
+
+    return [True]
 
 # -------------------------------------------------------------------
 
@@ -256,10 +359,12 @@ if __name__ == "__main__":
 
     run_query(db_path, "INSERT INTO Users (login,email,password,display_name,creation_date) VALUES ('albert','albertdu95@tamereenshort.com','1234','Albert Dantamèr','2023/11/19');")
 
-    print(create_User(db_path,'alber','albertdu95@tamereenshort.com','azerty_vivelasecurite','Jean Paul Rouve',2023,11,19))
+    print(fetch_Data(db_path,'Users'))
+    print(remove_User(db_path,'alber'))
+    print(fetch_Data(db_path,'Users'))
 
     run_query(db_path,"DELETE FROM Users WHERE login = 'albert';")
-    run_query(db_path,"DELETE FROM Users WHERE login = 'Onyx';")
+    run_query(db_path,"DELETE FROM Users WHERE login = 'alber';")
 
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Mairie';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Gym';")
@@ -268,3 +373,11 @@ if __name__ == "__main__":
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Chateau';")
 
     pass
+
+# -------------------------------------------------------------------
+"""
+Next function to be implemented:
+        Fct qui renvoie que les batiments présent dans une certaine zone autour du User
+                        Entrées : GPS + côté du carré de recherche
+
+"""
