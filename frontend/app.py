@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import folium
 import sys
+from datetime import datetime
 
 from backend.db.functions import *
 
@@ -48,11 +49,25 @@ def getMapData():
 def login():
     return render_template("welcome/index.html")
 
-@app.route('/register', methods=['GET'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template("welcome/register.html")
+    infos = request.form
+    mail = infos.get("mail")
+    name = infos.get("name")
+    mdp = infos.get("mdp")
 
-@app.route('/forgot', methods=['GET'])
+    if request.method == 'GET':
+        return render_template("welcome/register.html", is_created = False, reg_issue = "")
+
+    is_created = create_User("backend/db/database.db", login = name, email = mail, password=mdp, display_name="", year = datetime.now().year, month = datetime.now().month, day = datetime.now().day)
+
+    if is_created[0]:
+        return render_template("welcome/register.html", is_created = is_created[0], reg_issue = "")
+    else:
+        return render_template("welcome/register.html", is_created = is_created[0], reg_issue = is_created[1])
+    
+
+@app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
     return render_template("welcome/forgot_mail.html")
 
@@ -63,14 +78,6 @@ def forgot():
 
 @app.route('/post_login', methods=['POST'])
 def postlog():
-    "<p>Cond of connection will be implemented asap</p>"
-
-@app.route('/post_reg', methods=['POST'])
-def postreg():
-    "<p>Cond of connection will be implemented asap</p>"
-
-@app.route('/post_forgot', methods=['POST'])
-def postforgot():
     "<p>Cond of connection will be implemented asap</p>"
 
 ############################
