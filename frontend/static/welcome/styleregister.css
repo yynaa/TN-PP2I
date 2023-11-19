@@ -60,14 +60,14 @@ header {
     color: gray;
 }
 
-.inputbox img[src="user_logo.png"] {
+.inputbox img[src$="user_logo.png"] {
     position: relative;
     left: 86%;
     top: -42px;
     font-size: 20px;
 }
 
-.inputbox img[src="padlock_logo.png"] {
+.inputbox img[src$="padlock_logo.png"] {
     position: relative;
     left: 86%;
     top: -30px;
@@ -75,7 +75,7 @@ header {
     font-size: 20px;
 }
 
-.inputbox img[src="mail_logo.png"] {
+.inputbox img[src$="mail_logo.png"] {
     position: relative;
     left: 86%;
     top: -30px;

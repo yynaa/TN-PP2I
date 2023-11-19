@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wheep</title>
-    <link rel="shortcut icon" href="handi_logo.png">
-    <link rel="stylesheet" href="styleregister.css">
+    <link rel="shortcut icon" href="{{url_for('static', filename='welcome/handi_logo.jpg')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='welcome/styleregister.css')}}">
 </head>
 <body>
     <header>
@@ -20,7 +20,7 @@
                 <br>
                 <div class="inputbox">
                     <input id="mail" type="text" placeholder="Adresse e-mail" required>
-                    <img class="logomail" src="mail_logo.png" alt="Image_id">
+                    <img class="logomail" src="{{url_for('static', filename='welcome/mail_logo.png')}}" alt="Image_id">
                 </div>
                 <br>
                 <button type="submit" class="btn">Changer de mot de passe</button>

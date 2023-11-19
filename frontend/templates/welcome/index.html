@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wheep</title>
-    <link rel="shortcut icon" href="handi_logo.png">
-    <link rel="stylesheet" href="stylelogin.css">
+    <link rel="shortcut icon" href="{{url_for('static', filename='welcome/handi_logo.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='welcome/stylelogin.css')}}">
 </head>
 <body>
     <header>
@@ -16,35 +16,27 @@
                 <br>
                 <div class="inputbox">
                     <input id="name" type="text" placeholder="Identifiant" required>
-                    <img class="logoguy" src="user_logo.png" alt="Image_id">
+                    <img class="logoguy" src="{{url_for('static', filename='welcome/user_logo.png')}}" alt="Image_id">
                 </div>
                 <br>
                 <div class="inputbox">
                     <input id="mdp" type="text" placeholder="Mot de passe" required>
-                    <img class="logolock" src="padlock_logo.png" alt="Image_mdp">
+                    <img class="logolock" src="{{url_for('static', filename='welcome/padlock_logo.png')}}" alt="Image_mdp">
                 </div>
                 <br>
                 <div class="remember-forgot">
                     <label><input type="checkbox">Se souvenir de moi</label>
-                    <a href="forgot_mail.html">Mot de passe oublié</a>
+                    <a href="{{url_for('forgot')}}">Mot de passe oublié</a>
                 </div>
                 
                 <button type="submit" class="btn">Se connecter</button>
 
                 <div class="register-link">
-                    <p>Vous n'avez pas de compte? <a href="register.html">S'enregistrer</a></p>
+                    <p>Vous n'avez pas de compte? <a href="{{url_for('register')}}">S'enregistrer</a></p>
                 </div>
 
             </form>
         </section>
     </header>
-    <footer>
-        <div class="sidenav">
-            TELECOM Nancy
-            Version: 
-            <a href="#">A propos</a>
-            <a href="#">Nous contacter</a>
-        </div>
-    </footer>
 </body>
 </html>
