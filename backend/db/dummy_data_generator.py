@@ -1,9 +1,10 @@
 import sqlite3
+import random
 
-connexion = sqlite3.connect('backend/db/database.db')
+connexion = sqlite3.connect('backend/db/dummy.db')
 cursor = connexion.cursor()
 
-db_path = 'backend/db/database.db'
+db_path = 'backend/db/dummy.db'
 
 # CREATING ALL THE TABLE IN THE DB
 cursor.execute('''
@@ -19,8 +20,7 @@ cursor.execute('''
         ([review_id] INTEGER PRIMARY KEY NOT NULL, [user_login] VARCHAR, [content] VARCHAR)
     ''')
 
-columns_names_buildings = ["building_id","building_name","address","GPS_lat","GPS_long","evaluation"]
-columns_names_users = ["login","email","password","display_name","creation_date"]
-columns_names_reviews = ["review_id","user_login","content"]
+for i in range(100):
+    cursor.execute('''INSERT INTO Buildings VALUES (?, ?, ?, ?, ?, ?)''', (i, "Building " + str(i), "Address " + str(i), 48.689 + random.uniform(-1,1), 6.2 + random.uniform(-1,1), 5))
 
 connexion.close()
