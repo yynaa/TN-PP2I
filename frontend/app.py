@@ -46,9 +46,21 @@ def getMapData():
 ############################################################################
 # LOGIN PART
 
-@app.route('/login', methods = ['GET'])
+@app.route('/login', methods = ['GET', 'POST'])
 def login():
-    return render_template("welcome/index.html")
+    infos = request.form
+    login = infos.get("login")
+    mdp = infos.get("mdp")
+
+    if request.method == 'GET':
+        return render_template("welcome/index.html", is_logged=False, log_issue="")
+
+    is_logged = check_password("backend/db/database.db", login=login, given_password=mdp)
+
+    if is_logged[0]:
+        return render_template("welcome/index.html", is_logged = is_logged[0], log_issue="")
+    else:
+        return render_template("welcome/index.html", is_logged = is_logged[0], log_issue=is_logged[1])
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -83,17 +95,6 @@ def forgot():
         return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
     else:
         return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
-
-#########################
-
-# THESES HTML PAGES ARE NOT PERMANENT, JUST HERE TO CHECK IF THE DB AND 
-# THE FRONT END STRUCTURE ARE WORKING
-
-@app.route('/post_login', methods=['POST'])
-def postlog():
-    "<p>Cond of connection will be implemented asap</p>"
-
-############################
 
 #########################################################################
 
