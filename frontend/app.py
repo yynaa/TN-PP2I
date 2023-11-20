@@ -17,7 +17,7 @@ def mapLoader():
     """
     m = folium.Map(location=[48.689, 6.2], zoom_start=13)
 
-    for building in fetch_Data("backend/db/database.db", "Buildings"):
+    for building in fetch_Data("backend/db/dummy.db", "Buildings"):
         folium.Marker(
             location=[building["GPS_lat"], building["GPS_long"]],
             popup=building["building_name"],
@@ -25,22 +25,6 @@ def mapLoader():
         ).add_to(m)
 
     return m.get_root().render()
-
-    for building in fetch_Data("backend/db/database.db", "Buildings"):
-        folium.Marker(
-            location=[building["GPS_lat"], building["GPS_long"]],
-            popup=building["building_name"],
-            icon=folium.Icon(color='red', icon='info-sign')
-        ).add_to(m)
-
-    return m.get_root().render()
-
-def getMapData():
-    """
-    Returns the map data
-    """
-    # this is test data
-    return []
 
 ############################################################################
 # LOGIN PART
