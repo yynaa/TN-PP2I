@@ -70,7 +70,19 @@ def register():
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
-    return render_template("welcome/forgot_mail.html")
+    infos = request.form
+    login = infos.get("login")
+    mdp = infos.get("mdp")
+
+    if request.method == 'GET':
+        return render_template("welcome/forgot_mail.html", is_reseting=False, password_issue="")
+
+    is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
+
+    if is_reseting[0]:
+        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
+    else:
+        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
 
 #########################
 
