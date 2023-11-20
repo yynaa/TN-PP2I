@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import folium
 import sys
+from datetime import datetime
 
 from backend.db.functions import *
 
@@ -45,36 +46,55 @@ def getMapData():
 ############################################################################
 # LOGIN PART
 
-@app.route('/login', methods = ['GET'])
+@app.route('/login', methods = ['GET', 'POST'])
 def login():
-    return render_template("welcome/index.html")
+    infos = request.form
+    login = infos.get("login")
+    mdp = infos.get("mdp")
 
-@app.route('/register', methods=['GET'])
+    if request.method == 'GET':
+        return render_template("welcome/index.html", is_logged=False, log_issue="")
+
+    is_logged = check_password("backend/db/database.db", login=login, given_password=mdp)
+
+    if is_logged[0]:
+        return render_template("welcome/index.html", is_logged = is_logged[0], log_issue="")
+    else:
+        return render_template("welcome/index.html", is_logged = is_logged[0], log_issue=is_logged[1])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template("welcome/register.html")
+    infos = request.form
+    mail = infos.get("mail")
+    name = infos.get("name")
+    mdp = infos.get("mdp")
 
-@app.route('/forgot', methods=['GET'])
+    if request.method == 'GET':
+        return render_template("welcome/register.html", is_created = False, reg_issue = "")
+
+    is_created = create_User("backend/db/database.db", login = name, email = mail, password=mdp, display_name="", year = datetime.now().year, month = datetime.now().month, day = datetime.now().day)
+
+    if is_created[0]:
+        return render_template("welcome/register.html", is_created = is_created[0], reg_issue = "")
+    else:
+        return render_template("welcome/register.html", is_created = is_created[0], reg_issue = is_created[1])
+    
+
+@app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
-    return render_template("welcome/forgot_mail.html")
+    infos = request.form
+    login = infos.get("login")
+    mdp = infos.get("mdp")
 
-#########################
+    if request.method == 'GET':
+        return render_template("welcome/forgot_mail.html", is_reseting=False, password_issue="")
 
-# THESES HTML PAGES ARE NOT PERMANENT, JUST HERE TO CHECK IF THE DB AND 
-# THE FRONT END STRUCTURE ARE WORKING
+    is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
 
-@app.route('/post_login', methods=['POST'])
-def postlog():
-    "<p>Cond of connection will be implemented asap</p>"
-
-@app.route('/post_reg', methods=['POST'])
-def postreg():
-    "<p>Cond of connection will be implemented asap</p>"
-
-@app.route('/post_forgot', methods=['POST'])
-def postforgot():
-    "<p>Cond of connection will be implemented asap</p>"
-
-############################
+    if is_reseting[0]:
+        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
+    else:
+        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
 
 #########################################################################
 
