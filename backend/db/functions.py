@@ -1,7 +1,7 @@
 import sqlite3
 from math import*
-from core import columns_names_buildings, columns_names_users,columns_names_reviews
-from error import*
+
+from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews 
 
 # -------------------------------------------------------------------
 

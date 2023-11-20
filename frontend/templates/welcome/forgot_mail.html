@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheep</title>
+    <link rel="shortcut icon" href="{{url_for('static', filename='welcome/handi_logo.jpg')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='welcome/styleregister.css')}}">
+</head>
+<body>
+    <header>
+        <section class="loginwindow">
+            <form action="/forgot" method="POST">
+                <br>
+                <h1>Wheep</h1>
+                <br>
+                {% if is_reseting %}
+                <p style="color: green;">
+                    Mot de passe modifié avec succès
+                </p>
+                {% elif password_issue|length > 0 %}
+                <p style="color: red;">
+                    {{ password_issue }}
+                </p>
+                {% else %}
+                <p style="color: black;">
+                    Insérez votre login et votre nouveau mot de passe.
+                </p>
+                <br>
+                <div class="inputbox">
+                    <input id="mail" name="login" type="text" placeholder="Identifiant" required>
+                    <img class="logoguy" src="{{url_for('static', filename='welcome/user_logo.png')}}" alt="Image_id">
+                </div>
+                <br>
+                <div class="inputbox">
+                    <input id="mdp" name="mdp" type="text" placeholder="Mot de passe" required>
+                    <img class="logolock" src="{{url_for('static', filename='welcome/padlock_logo.png')}}" alt="Image_mdp">
+                </div>
+                <br>
+                <button type="submit" class="btn">Changer de mot de passe</button>
+                {% endif %}
+            </form>
+        </section>
+    </header>
+</body>
+</html>

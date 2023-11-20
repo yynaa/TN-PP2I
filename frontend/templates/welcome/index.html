@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheep</title>
+    <link rel="shortcut icon" href="{{url_for('static', filename='welcome/handi_logo.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='welcome/stylelogin.css')}}">
+</head>
+<body>
+    <header>
+        <section class="loginwindow">
+            <form action="/login" method="POST">
+                <br>
+                <h1>Wheep</h1>
+                <br>
+                {% if is_logged %}
+                <p style="color: green;">
+                    Vous êtes connecté!
+                </p>
+                {% elif log_issue|length > 0 %}
+                <p style="color: red;">
+                    {{ log_issue }}
+                </p>
+                {% else %}
+                <div class="inputbox">
+                    <input id="name" name="login" type="text" placeholder="Identifiant" required>
+                    <img class="logoguy" src="{{url_for('static', filename='welcome/user_logo.png')}}" alt="Image_id">
+                </div>
+                <br>
+                <div class="inputbox">
+                    <input id="mdp" name="mdp" type="password" placeholder="Mot de passe" required>
+                    <img class="logolock" src="{{url_for('static', filename='welcome/padlock_logo.png')}}" alt="Image_mdp">
+                </div>
+                <br>
+                <div class="remember-forgot">
+                    <label><input type="checkbox">Se souvenir de moi</label>
+                    <a href="{{url_for('forgot')}}">Mot de passe oublié</a>
+                </div>
+                
+                <button type="submit" class="btn">Se connecter</button>
+
+                <div class="register-link">
+                    <p>Vous n'avez pas de compte? <a href="{{url_for('register')}}">S'enregistrer</a></p>
+                </div>
+                {% endif %}
+            </form>
+        </section>
+    </header>
+</body>
+</html>
