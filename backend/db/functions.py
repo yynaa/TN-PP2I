@@ -1,6 +1,7 @@
 import sqlite3
 from math import*
-from core import columns_names_buildings, columns_names_users,columns_names_reviews 
+from core import columns_names_buildings, columns_names_users,columns_names_reviews
+from error import*
 
 # -------------------------------------------------------------------
 
@@ -261,6 +262,9 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
         list: [bool , str if needed]: Did the function successfully create the account? If not, why?
     """
 
+    if not login.isalnum():
+        return [False, invalid_password_error.get_message()]
+
     users_db = fetch_Data(db_path,'Users')
     login_found,email_found = False,False
     for i in users_db:
@@ -269,9 +273,9 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
         if i['email'] == email:
             email_found = True
     if login_found:
-        return [False, "There is already an account with this login."]
+        return [False, already_used_login_error.get_message()]
     if email_found:
-        return [False, "There is already an account with this email."]
+        return [False, already_used_email_error.get_message()]
 
     date = str(year) + "/" + str(month) + "/" + str(day)
     request = "INSERT INTO Users VALUES ('" + login + "','" + email + "','" + password + "','" + display_name + "','" + date + "');"
@@ -281,8 +285,7 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
     return [True]
 
 def check_password(db_path:str,login:str,given_password:str)->list:
-    """Updates the password of the given login. The new password must be different
-        from the old one.
+    """Checks if the given password is the same as the true password of the given login.
 
     Args:
         db_path (str): Path of the Database.
@@ -296,11 +299,10 @@ def check_password(db_path:str,login:str,given_password:str)->list:
 
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
-        return [False, "There is no account with this login."]
-
+        return [False, no_such_login_error.get_message()]
     if given_password == user_data['password']:
         return [True]
-    return [False, "The given password isn't the true password of the account."]
+    return [False, wrong_password_error.get_message()]
 
 def update_password(db_path:str,login:str,newPassword:str)->list:
     """Updates the password of the given login. The new password must be different
@@ -317,9 +319,9 @@ def update_password(db_path:str,login:str,newPassword:str)->list:
 
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
-        return [False, "There is no account with this login."]
+        return [False, no_such_login_error.get_message()]
     if newPassword == user_data['password']:
-        return [False, "The old password and the new one are the same."]
+        return [False, same_password_as_before_error.get_message()]
 
     run_query(db_path,"UPDATE Users SET password = '" + newPassword + "' WHERE login = '" + login + "';")
 
@@ -338,11 +340,73 @@ def remove_User(db_path:str,login:str)->list:
 
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
-        return [False, "There is no account with this login."]
+        return [False, no_such_login_error.get_message()]
     
     run_query(db_path,"DELETE FROM Users WHERE login = '" + login + "';")
 
     return [True]
+
+# -------------------------------------------------------------------
+
+def nb_buildings(db_path:str)->int:
+    """Returns the ammount of buildings in the given database.
+
+    Args:
+        db_path (str): Path of the database.
+
+    Returns:
+        int: Ammount of buildings in the given database.
+    """
+    
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM Buildings;")
+    returned_int = cursor.fetchall()[0][0]
+
+    connexion.close()
+
+    return returned_int
+
+def nb_users(db_path:str)->int:
+    """Returns the ammount of users in the given database.
+
+    Args:
+        db_path (str): Path of the database.
+
+    Returns:
+        int: Ammount of users in the given database.
+    """
+    
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM Users;")
+    returned_int = cursor.fetchall()[0][0]
+
+    connexion.close()
+
+    return returned_int
+
+def nb_reviews(db_path:str)->int:
+    """Returns the ammount of reviews in the given database.
+
+    Args:
+        db_path (str): Path of the database.
+
+    Returns:
+        int: Ammount of reviews in the given database.
+    """
+    
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM Reviews;")
+    returned_int = cursor.fetchall()[0][0]
+
+    connexion.close()
+
+    return returned_int
 
 # -------------------------------------------------------------------
 
@@ -359,12 +423,9 @@ if __name__ == "__main__":
 
     run_query(db_path, "INSERT INTO Users (login,email,password,display_name,creation_date) VALUES ('albert','albertdu95@tamereenshort.com','1234','Albert Dantamèr','2023/11/19');")
 
-    print(fetch_Data(db_path,'Users'))
-    print(remove_User(db_path,'alber'))
-    print(fetch_Data(db_path,'Users'))
+
 
     run_query(db_path,"DELETE FROM Users WHERE login = 'albert';")
-    run_query(db_path,"DELETE FROM Users WHERE login = 'alber';")
 
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Mairie';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Gym';")
@@ -375,9 +436,3 @@ if __name__ == "__main__":
     pass
 
 # -------------------------------------------------------------------
-"""
-Next function to be implemented:
-        Fct qui renvoie que les batiments présent dans une certaine zone autour du User
-                        Entrées : GPS + côté du carré de recherche
-
-"""
