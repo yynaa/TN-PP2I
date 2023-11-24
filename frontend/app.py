@@ -6,6 +6,8 @@ from backend.db.functions import *
 
 app = Flask(__name__)
 
+app.static_folder=app.root_path + app.static_url_path
+
 @app.route('/')
 def root():
     return '<h1>ULTRA MEGA SUPER WHEELCHAIR MAN SIMULATOR 2019</h1>'
@@ -15,7 +17,7 @@ def mapLoader():
     """
     Loads the map page
     """
-    m = folium.Map(location=[48.689, 6.2], zoom_start=13)
+    m = folium.Map(location=[48.689, 6.2], zoom_start=13, control_scale=True)
 
     for building in fetch_Data("backend/db/dummy.db", "Buildings"):
         folium.Marker(
@@ -24,7 +26,9 @@ def mapLoader():
             icon=folium.Icon(color='red', icon='info-sign')
         ).add_to(m)
 
-    return m.get_root().render()
+    frame = m.get_root().render()
+
+    return render_template("map.html", frame=frame)
 
 ############################################################################
 # LOGIN PART
@@ -62,5 +66,9 @@ def postforgot():
 
 #########################################################################
 
-#if __name__ == '__main__':
+def runFlask():
+    """
+    Runs the flask server
+    """
+    app.run(host='localhost', port=8080, debug=True)
     
