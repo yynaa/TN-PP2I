@@ -1,5 +1,33 @@
-#map-container {
+#body-container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
     width: 100vw;
+}
+
+#header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 5vh;
+    width: 100vw;
+    background: linear-gradient(to bottom, #ffffff, #c0c0c0);
+    border-bottom: 3px solid #111;
+}
+
+.map-container {
+    display: flex;
+    height: 95vh;
+    width: 100vw;
+}
+
+.popup-container {
+    display: flex;
+    width: 100vw;
+    height: 0vh;
+}
+
+.popup-active {
+    height: 47.5vh;
 }

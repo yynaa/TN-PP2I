@@ -3,8 +3,17 @@
     <head>
         <title>Map</title>
         <link rel="stylesheet" href="/static/map.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     </head>
     <body>
-        <div id="map-container">{{ frame|safe }}</div>
+        <div id="body-container">
+            <div id="header-container">
+                
+            </div>
+            <div id="map" class="map-container"></div>
+            <script src="/static/leaflet.js"></script>
+            <div id="popup" class="popup-container"></div>
+        </div>
     </body>
 </html>

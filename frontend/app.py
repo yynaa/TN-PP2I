@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-import folium
 import sys
 
 from backend.db.functions import *
@@ -17,18 +16,7 @@ def mapLoader():
     """
     Loads the map page
     """
-    m = folium.Map(location=[48.689, 6.2], zoom_start=13, control_scale=True)
-
-    for building in fetch_Data("backend/db/dummy.db", "Buildings"):
-        folium.Marker(
-            location=[building["GPS_lat"], building["GPS_long"]],
-            popup=building["building_name"],
-            icon=folium.Icon(color='red', icon='info-sign')
-        ).add_to(m)
-
-    frame = m.get_root().render()
-
-    return render_template("map.html", frame=frame)
+    return render_template("map.html")
 
 ############################################################################
 # LOGIN PART
@@ -63,6 +51,14 @@ def postforgot():
     "<p>Cond of connection will be implemented asap</p>"
 
 ############################
+#API
+
+@app.route('/api/buildings')
+def apiBuildings():
+    """
+    Returns the list of buildings
+    """
+    return fetch_Data("backend/db/dummy.db", "Buildings")
 
 #########################################################################
 
