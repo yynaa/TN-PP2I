@@ -8,7 +8,7 @@ db_path = 'database.db'
 # CREATING ALL THE TABLE IN THE DB
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Buildings
-        ([building_id] INTEGER PRIMARY KEY NOT NULL, [building_name] VARCHAR, [address] VARCHAR, [GPS_lat] REAL, [GPS_long] REAL, [evaluation] INTEGER)          
+        ([building_id] INTEGER PRIMARY KEY NOT NULL, [building_name] VARCHAR, [address] VARCHAR, [GPS_lat] REAL, [GPS_long] REAL, [evaluation] INTEGER, [tags] INTEGER)          
     ''')
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Users
