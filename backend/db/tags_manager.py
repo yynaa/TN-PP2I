@@ -1,8 +1,10 @@
 from enum import IntEnum, auto
 
 class Tags(IntEnum):
-    rampe = auto()
-    fauteuilRoulant = auto()
+    entrance_fauteuilRoulant = auto()
+    toilets_fauteuilRoulant = auto()
+    seat_fauteuilRoulant = auto()
     # ...
 
-# print(Tags.rampe.value,Tags.fauteuilRoulant.value)
+if __name__ == "__main__":
+    print(Tags.entrance_fauteuilRoulant.value,Tags.toilets_fauteuilRoulant.value,Tags.seat_fauteuilRoulant.value)

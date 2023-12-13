@@ -1,4 +1,5 @@
-<nom enseigne>,<classe>, <adresse enseigne>,<latitude>, <longitude>, <tags>
+<nom enseigne>,<classe>, <adresse enseigne>,<latitude>, <longitude>, <tags>§
+<Entrée accessible aux personnes en fauteuil roulant>,<Toilettes accessibles aux personnes en fauteuil roulant>,<Sièges accessibles aux personnes en fauteuil roulant>§
 <La Faille>,<Bar>,<11 Rue Dom Calmet ; 54000 Nancy>,<48.69165797768311>,<6.181005234286637>,<Entrée accessible aux personnes en fauteuil roulant ; Toilettes accessibles aux personnes en fauteuil roulant ; Sièges accessibles aux personnes en fauteuil roulant>§
 <Le Capri>,<Restaurant>,<26 Rue Stanislas ; 54000 Nancy>,<48.69312491964439>,<6.181353997590646>,<Entrée non accessible aux personnes en fauteuil roulant>§
 <L'Atelier 35>,<Restaurant>,<35 Rue des Ponts ; 54000 Nancy>,<48.68818624664421>,<6.1822189110828205>,<Entrée accessible aux personnes en fauteuil roulant ; Sièges accessibles aux personnes en fauteuil roulant>§
