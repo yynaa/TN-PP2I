@@ -1,5 +1,15 @@
 import sqlite3
-from backend.db.tags_manager import*
+from enum import IntEnum, auto
+
+# -------------------------------------------------------------------
+
+class Tags(IntEnum):
+    entrance_fauteuilRoulant = auto()
+    toilets_fauteuilRoulant = auto()
+    seat_fauteuilRoulant = auto()
+    # ...
+
+# -------------------------------------------------------------------
 
 connexion = sqlite3.connect('database.db')
 cursor = connexion.cursor()
@@ -36,7 +46,6 @@ if __name__ == "__main__":
         tag_list = content[1]
         content.remove(title_list)
         content.remove(tag_list)
-        print(tag_list)
         for i in content:
             i = i.split(",")
             tags = i[-1]
@@ -48,9 +57,10 @@ if __name__ == "__main__":
                     tag_value += Tags.toilets_fauteuilRoulant.value
                 elif j == "<Sièges accessibles aux personnes en fauteuil roulant>":
                     tag_value += Tags.seat_fauteuilRoulant.value
-            if len(i) == 5:
+            if len(i) >= 3:
                 cursor.execute('''
                     INSERT INTO Buildings (building_name,class,address,GPS_lat,GPS_long,evaluation,tags) VALUES (?,?,?,?,?,100,?);
                                ''', (i[0],i[1],i[2],i[3],i[4],tag_value))
+                connexion.commit()
 
 connexion.close()
