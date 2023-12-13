@@ -10,20 +10,35 @@
 <body>
     <header>
         <section class="loginwindow">
-            <form action="">
+            <form action="/forgot" method="POST">
                 <br>
                 <h1>Wheep</h1>
                 <br>
+                {% if is_reseting %}
+                <p style="color: green;">
+                    Mot de passe modifié avec succès
+                </p>
+                {% elif password_issue|length > 0 %}
+                <p style="color: red;">
+                    {{ password_issue }}
+                </p>
+                {% else %}
                 <p style="color: black;">
-                    Insérez votre adresse-mail pour recevoir un message de réinitialisation.
+                    Insérez votre login et votre nouveau mot de passe.
                 </p>
                 <br>
                 <div class="inputbox">
-                    <input id="mail" type="text" placeholder="Adresse e-mail" required>
-                    <img class="logomail" src="{{url_for('static', filename='welcome/mail_logo.png')}}" alt="Image_id">
+                    <input id="mail" name="login" type="text" placeholder="Identifiant" required>
+                    <img class="logoguy" src="{{url_for('static', filename='welcome/user_logo.png')}}" alt="Image_id">
+                </div>
+                <br>
+                <div class="inputbox">
+                    <input id="mdp" name="mdp" type="text" placeholder="Mot de passe" required>
+                    <img class="logolock" src="{{url_for('static', filename='welcome/padlock_logo.png')}}" alt="Image_mdp">
                 </div>
                 <br>
                 <button type="submit" class="btn">Changer de mot de passe</button>
+                {% endif %}
             </form>
         </section>
     </header>
