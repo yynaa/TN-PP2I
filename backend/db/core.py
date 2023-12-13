@@ -57,10 +57,20 @@ if __name__ == "__main__":
                     tag_value += Tags.toilets_fauteuilRoulant.value
                 elif j == "<Sièges accessibles aux personnes en fauteuil roulant>":
                     tag_value += Tags.seat_fauteuilRoulant.value
+            
+            i_list = []
             if len(i) >= 3:
+                for j in i:
+                    j = list(j)
+                    j.pop(0)
+                    j.pop()
+                    j_final = ""
+                    for k in j:
+                        j_final += k
+                    i_list.append(j_final)
                 cursor.execute('''
                     INSERT INTO Buildings (building_name,class,address,GPS_lat,GPS_long,evaluation,tags) VALUES (?,?,?,?,?,100,?);
-                               ''', (i[0],i[1],i[2],i[3],i[4],tag_value))
+                               ''', (i_list[0],i_list[1],i_list[2],i_list[3],i_list[4],tag_value))
                 connexion.commit()
 
 connexion.close()
