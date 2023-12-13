@@ -60,6 +60,13 @@ def apiBuildings():
     """
     return fetch_Data("backend/db/dummy.db", "Buildings")
 
+@app.route('/api/b/<int:id>')
+def apiBuilding(id):
+    """
+    Returns the building with the given id
+    """
+    return fetch_Data_buildings("backend/db/dummy.db", id)
+
 #########################################################################
 
 def runFlask():

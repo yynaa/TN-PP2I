@@ -13,7 +13,19 @@
             </div>
             <div id="map" class="map-container"></div>
             <script src="/static/leaflet.js"></script>
-            <div id="popup" class="popup-container"></div>
+            <div id="popup" class="popup-container">
+                <div id="popup-controls">
+                    <button id="popup-close" onclick="closePopup()">❌</button>
+                </div>
+                <div id="popup-content">
+                    <div id="popup-building-info">
+                        <img id="db-buildingimage" src="{{url_for('static', filename='laspastas.jpg')}}"/>
+                        <div id="db-buildingname">Ta race la pute</div>
+                        <div id="db-buildingdescription">C'est une pute</div>
+                        <div id="db-buildingaddress">69 rue de la weed</div> 
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

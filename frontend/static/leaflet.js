@@ -12,6 +12,27 @@ var markerLayer = L.layerGroup().addTo(map);
 
 var isPopupActive = false;
 
+function openPopup() {
+    document.getElementById("map").classList.add("popup-active");
+    document.getElementById("popup").classList.add("popup-active");
+    isPopupActive = true;
+}
+
+function closePopup() {
+    document.getElementById("map").classList.remove("popup-active");
+    document.getElementById("popup").classList.remove("popup-active");
+    isPopupActive = false;
+}
+
+function togglePopup() {
+    if (isPopupActive) {
+        closePopup();
+    }
+    else {
+        openPopup();
+    }
+}
+
 // create markers
 function createMarkersFromJSON(json) {
     obj = eval(json);
@@ -19,16 +40,7 @@ function createMarkersFromJSON(json) {
         var building = obj[building_index];
         var marker = L.marker([building.GPS_lat, building.GPS_long]).addTo(markerLayer);
         marker.on('click', function (e) {
-            if (isPopupActive) {
-                document.getElementById("map").classList.remove("popup-active");
-                document.getElementById("popup").classList.remove("popup-active");
-                isPopupActive = false;
-            }
-            else {
-                document.getElementById("map").classList.add("popup-active");
-                document.getElementById("popup").classList.add("popup-active");
-                isPopupActive = true;
-            }
+            togglePopup();
         });
     }
 }
