@@ -72,6 +72,23 @@ def forgot():
         return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
     else:
         return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
+    
+############################
+#API
+
+@app.route('/api/buildings')
+def apiBuildings():
+    """
+    Returns the list of buildings
+    """
+    return fetch_Data("backend/db/dummy.db", "Buildings")
+
+@app.route('/api/b/<int:id>')
+def apiBuilding(id):
+    """
+    Returns the building with the given id
+    """
+    return fetch_Data_buildings("backend/db/dummy.db", id)
 
 #########################################################################
 

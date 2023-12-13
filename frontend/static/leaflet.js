@@ -33,6 +33,17 @@ function togglePopup() {
     }
 }
 
+function setMarkerData(id){
+    fetch('/api/b/' + id)
+        .then((response) => response.json())
+        .then((json) => {
+            document.getElementById("db-buildingname").innerHTML = json.building_name;
+            document.getElementById("db-buildingdescription").innerHTML = json.class;
+            document.getElementById("db-buildingaddress").innerHTML = json.address;
+        });
+
+}
+
 // create markers
 function createMarkersFromJSON(json) {
     obj = eval(json);
@@ -41,6 +52,7 @@ function createMarkersFromJSON(json) {
         var marker = L.marker([building.GPS_lat, building.GPS_long]).addTo(markerLayer);
         marker.on('click', function (e) {
             togglePopup();
+            setMarkerData(building.building_id);
         });
     }
 }
