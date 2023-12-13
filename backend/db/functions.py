@@ -1,7 +1,7 @@
 import sqlite3
 from math import*
 
-from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews 
+from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews
 from error import*
 
 # -------------------------------------------------------------------
@@ -55,9 +55,7 @@ def fetch_Data(db_path:str,table_name:str)->list[dict]:
     else:
         return []
 
-    select_query = "SELECT * FROM " + table_name
-
-    cursor.execute(select_query)
+    cursor.execute("SELECT * FROM " + str(table_name) + ";")
 
     rows = cursor.fetchall()
     returned_list = []
@@ -90,8 +88,7 @@ def fetch_Data_buildings(db_path:str,building_id:int)->dict:
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    select_query = "SELECT * FROM Buildings WHERE building_id = " + str(building_id)
-    cursor.execute(select_query)
+    cursor.execute("SELECT * FROM Buildings WHERE building_id = ?", (building_id,))
     content = cursor.fetchall()
 
     if content == []:
@@ -125,8 +122,7 @@ def fetch_Data_user(db_path:str,user_login:str)->dict:
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    select_query = "SELECT * FROM Users WHERE login = '" + user_login + "';"
-    cursor.execute(select_query)
+    cursor.execute("SELECT * FROM Users WHERE login = ?;", (user_login,))
     content = cursor.fetchall()
 
     if content == []:
@@ -219,7 +215,7 @@ def nearest_building(db_path:str,building_name:str)->str:
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    cursor.execute("SELECT GPS_lat,GPS_long FROM Buildings WHERE building_name = '" + building_name + "'")
+    cursor.execute("SELECT GPS_lat,GPS_long FROM Buildings WHERE building_name = ?;", (building_name,))
     coord_target = cursor.fetchall()[0]
 
     square_of_search_size = 1
@@ -229,7 +225,7 @@ def nearest_building(db_path:str,building_name:str)->str:
     while nearest == None:
 
         square_of_search = str(coord_target[0] - square_of_search_size) + " < GPS_lat AND GPS_lat < " + str(coord_target[0] + square_of_search_size) + " AND " + str(coord_target[1] - square_of_search_size) + " < GPS_long AND GPS_long < " + str(coord_target[1] + square_of_search_size)
-        cursor.execute("SELECT building_name,GPS_lat,GPS_long FROM Buildings WHERE " + square_of_search + ";")
+        cursor.execute("SELECT building_name,GPS_lat,GPS_long FROM Buildings WHERE ?;", (square_of_search,))
         building_within_reach = cursor.fetchall()
 
         for i in building_within_reach:
@@ -279,9 +275,14 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
         return [False, already_used_email_error.get_message()]
 
     date = str(year) + "/" + str(month) + "/" + str(day)
-    request = "INSERT INTO Users VALUES ('" + login + "','" + email + "','" + password + "','" + display_name + "','" + date + "');"
 
-    run_query(db_path,request)
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("INSERT INTO Users VALUES ();", (login,email,password,display_name,date))
+
+    connexion.commit()
+    connexion.close()
 
     return [True]
 
@@ -324,7 +325,13 @@ def update_password(db_path:str,login:str,newPassword:str)->list:
     if newPassword == user_data['password']:
         return [False, same_password_as_before_error.get_message()]
 
-    run_query(db_path,"UPDATE Users SET password = '" + newPassword + "' WHERE login = '" + login + "';")
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("UPDATE Users SET password = ? WHERE login = ?;", (newPassword,login))
+
+    connexion.commit()
+    connexion.close()
 
     return [True]
 
@@ -343,7 +350,13 @@ def remove_User(db_path:str,login:str)->list:
     if user_data == {}:
         return [False, no_such_login_error.get_message()]
     
-    run_query(db_path,"DELETE FROM Users WHERE login = '" + login + "';")
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("DELETE FROM Users WHERE login = ?;", (login,))
+
+    connexion.commit()
+    connexion.close()
 
     return [True]
 
