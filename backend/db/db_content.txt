@@ -1,0 +1,12 @@
+<nom enseigne>,<classe>, <adresse enseigne>,<latitude>, <longitude>, <tags>
+<La Faille>,<Bar>,<11 Rue Dom Calmet ; 54000 Nancy>,<48.69165797768311>,<6.181005234286637>,<Entrée accessible aux personnes en fauteuil roulant ; Toilettes accessibles aux personnes en fauteuil roulant ; Sièges accessibles aux personnes en fauteuil roulant>§
+<Le Capri>,<Restaurant>,<26 Rue Stanislas ; 54000 Nancy>,<48.69312491964439>,<6.181353997590646>,<Entrée non accessible aux personnes en fauteuil roulant>§
+<L'Atelier 35>,<Restaurant>,<35 Rue des Ponts ; 54000 Nancy>,<48.68818624664421>,<6.1822189110828205>,<Entrée accessible aux personnes en fauteuil roulant ; Sièges accessibles aux personnes en fauteuil roulant>§
+<Burger King>,<Fast Food>,<36 Rue Saint-Dizier ; 54000 Nancy>,<48.69049600346439>,<6.182624806944509>,<Entrée accessible aux personnes en fauteuil roulant ; Toilettes accessibles aux personnes en fauteuil roulant ; Sièges accessibles aux personnes en fauteuil roulant>§
+<TELECOM Nancy>,<Ecole d'ingénieur>,<193 Av. Paul Muller ; 54600 Villers-lès-Nancy>,<48.67018375311994>,<6.154954145165704>,<Entrée accessible aux personnes en fauteuil roulant>§
+<Nancy Museum-Aquarium>,<Aquarium>,<34 Rue Sainte-Catherine ; 54000 Nancy>,<48.695717498609156>,<6.188277993534139>,<Entrée accessible aux personnes en fauteuil roulant ; Toilettes accessibles aux personnes en fauteuil roulant>§
+<FNAC>,<Magazin>,<2 Av. Foch ; 54000 Nancy>,<48.689836702454905>,<6.176427738108496>,<Entrée accessible aux personnes en fauteuil roulant>§
+<Institut Universitaire de Technologie Nancy-Charlemagne>,<Institut de Technologie>,<2Ter Bd Charlemagne ; 54000 Nancy>,<48.68326472314761>,<6.161192398867122>,<Entrée accessible aux personnes en fauteuil roulant>§
+<Piscine de Laxou>,<Piscine>,<2 Rue Pol Chone ; 54520 Laxou>,<48.68528986139049>,<6.150546628024705>,<Entrée accessible aux personnes en fauteuil roulant>§
+<Gare de Nancy>,<Gare>,<3 Place Thiers ; 54000 Nancy>,<48.69001723884969>,<6.174535479091851>,<Entrée accessible aux personnes en fauteuil roulant ; Toilettes accessibles aux personnes en fauteuil roulant>§
+

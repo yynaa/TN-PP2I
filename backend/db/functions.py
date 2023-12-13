@@ -448,6 +448,8 @@ if __name__ == "__main__":
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Tour';")
     run_query(db_path,"DELETE FROM Buildings WHERE building_name = 'Chateau';")
 
+    print(fetch_Data(db_path,"Buildings"))
+
     pass
 
 # -------------------------------------------------------------------
