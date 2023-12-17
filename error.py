@@ -1,24 +1,24 @@
 from datetime import datetime
 now = datetime.now()
-
 class Error:
     def __init__(self, message: str, path_to_logfile: str) -> None:
         self.error_message = message
         self.path_to_logfile = path_to_logfile
 
     def log_error(self):
+        current_time = now.strftime("%H:%M:%S")
+        current_date = now.strftime("%Y-%m-%d")
         try:
             with open(self.path_to_logfile, 'a') as log_file:
-                log_file.write(f"Error: {self.error_message}\n")
-                # You can add more details or timestamp if needed
-                log_file.write("Additional details here if necessary\n")
+                log_file.write(f"{current_date} {current_time} Error: {self.error_message}\n")
         except Exception as e:
             print(f"Error logging to file: {e}")
 
     def get_message(self):
-        self.log_error()  # Log the error when getting the message
+        self.log_error()
         return self.error_message
 
+    
 
 # -------------------------------------------------------------------
 
