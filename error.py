@@ -1,16 +1,25 @@
-class Error():
-    def __init__(self,message:str,path_to_logfile:str) -> None:
+from datetime import datetime
+
+class Error:
+    def __init__(self, message: str, path_to_logfile: str) -> None:
         self.error_message = message
         self.path_to_logfile = path_to_logfile
-        
-        pass
 
     def get_message(self):
         return self.error_message
 
+    def log_error(self):
+        current_time = now.strftime("%H:%M:%S")
+        current_date = now.strftime("%Y-%m-%d")
+        try:
+            with open(self.path_to_logfile, 'a') as log_file:
+                log_file.write(f"{current_date} {current_time} Error: {self.error_message}\n")
+        except Exception as e:
+            print(f"Error logging to file: {e}")
+
 # -------------------------------------------------------------------
 
-path_to_logefile = ""
+path_to_logefile = "ErrorLog.txt"
 
 no_such_login_error = Error("Il n'y a pas de compte avec ce login.",path_to_logefile)
 no_such_email_error = Error("Il n'y a pas de compte avec cet email.",path_to_logefile)
