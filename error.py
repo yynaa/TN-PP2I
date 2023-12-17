@@ -1,4 +1,5 @@
 from datetime import datetime
+now = datetime.now()
 
 class Error:
     def __init__(self, message: str, path_to_logfile: str) -> None:
