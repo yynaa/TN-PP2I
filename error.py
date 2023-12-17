@@ -6,17 +6,19 @@ class Error:
         self.error_message = message
         self.path_to_logfile = path_to_logfile
 
-    def get_message(self):
-        return self.error_message
-
     def log_error(self):
-        current_time = now.strftime("%H:%M:%S")
-        current_date = now.strftime("%Y-%m-%d")
         try:
             with open(self.path_to_logfile, 'a') as log_file:
-                log_file.write(f"{current_date} {current_time} Error: {self.error_message}\n")
+                log_file.write(f"Error: {self.error_message}\n")
+                # You can add more details or timestamp if needed
+                log_file.write("Additional details here if necessary\n")
         except Exception as e:
             print(f"Error logging to file: {e}")
+
+    def get_message(self):
+        self.log_error()  # Log the error when getting the message
+        return self.error_message
+
 
 # -------------------------------------------------------------------
 
