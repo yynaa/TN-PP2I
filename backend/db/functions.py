@@ -279,7 +279,7 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO Users VALUES ();", (login,email,password,display_name,date))
+    cursor.execute("INSERT INTO Users VALUES (?, ?, ?, ?, ?);", (login,email,password,display_name,date))
 
     connexion.commit()
     connexion.close()
