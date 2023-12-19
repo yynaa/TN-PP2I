@@ -3,6 +3,7 @@ import folium
 import sys
 from datetime import datetime, timedelta
 import jwt
+from werkzeug.security import generate_password_hash
 
 from backend.db.functions import *
 
@@ -64,12 +65,12 @@ def login():
     if red:
         return red
 
+    if request.method == 'GET':
+        return render_template("welcome/index.html", is_logged=False, log_issue="")
+
     infos = request.form
     login = infos.get("login")
     mdp = infos.get("mdp")
-
-    if request.method == 'GET':
-        return render_template("welcome/index.html", is_logged=False, log_issue="")
 
     is_logged = check_password("backend/db/database.db", login=login, given_password=mdp)
 
@@ -95,13 +96,13 @@ def register():
     if red:
         return red
 
+    if request.method == 'GET':
+        return render_template("welcome/register.html", is_created = False, reg_issue = "")
+
     infos = request.form
     mail = infos.get("mail")
     name = infos.get("name")
-    mdp = infos.get("mdp")
-
-    if request.method == 'GET':
-        return render_template("welcome/register.html", is_created = False, reg_issue = "")
+    mdp = generate_password_hash(infos.get("mdp"))
 
     y = datetime.now().year
     m = datetime.now().month
@@ -131,12 +132,12 @@ def forgot():
     if red:
         return red
 
-    infos = request.form
-    login = infos.get("login")
-    mdp = infos.get("mdp")
-
     if request.method == 'GET':
         return render_template("welcome/forgot_mail.html", is_reseting=False, password_issue="")
+
+    infos = request.form
+    login = infos.get("login")
+    mdp = generate_password_hash(infos.get("mdp"))
 
     is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
 
