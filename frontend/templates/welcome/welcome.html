@@ -13,15 +13,25 @@
         <div class="links">
             <ul>
                 <li><a href="#">Profil</a></li>
-                <li><a href="#">Rechercher</a></li>
+                <li><a href="{{url_for('mapLoader')}}">Rechercher</a></li>
                 <li><a href="#">Paramètres</a></li>
-                <li><a href="#">Connexion/Déconnexion</a></li>
+                <li>
+                    {% if is_logged %}
+                    <a href="{{url_for('disconnect')}}">Connexion/Déconnexion</a>
+                    {% else %}
+                    <a href="{{url_for('login')}}">Connexion/Déconnexion</a>
+                    {% endif %}
+                </li>
             </ul>
         </div>
         <div class="menu">
             <img src="{{url_for('static', filename='welcome/burger.png')}}" alt="menu" class="menu-hamburger">
         </div>
     </nav>
+
+    <div class="popup-box" id="popupBox">
+        <p>Vous êtes déconnecté</p>
+    </div>
 
     <header>
 
@@ -34,6 +44,27 @@
         menuHamburger.addEventListener('click',()=>{
         links.classList.toggle('mobile-menu')
         })
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var showPopup = '{{ session.get("is_logged") }}';
+
+    if (showPopup == 'False') {
+        document.getElementById('popupBox').click();
+    }
+    });
+</script>
+
+<script>
+    document.getElementById('popupBox').addEventListener('click', function() {
+    var popupBox = document.getElementById('popupBox');
+    popupBox.style.display = 'block';
+
+    setTimeout(function() {
+        popupBox.style.display = 'none';
+    }, 2000);
+});
 </script>
 
 </html>

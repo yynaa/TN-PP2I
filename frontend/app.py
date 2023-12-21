@@ -52,7 +52,7 @@ def getMapData():
 
 @app.route('/welcome')
 def welcome():
-    return render_template('welcome/welcome.html')
+    return render_template('welcome/welcome.html', is_logged=session.get('is_logged'))
 
 def check_connexion():
     if session.get('is_logged'):
@@ -148,7 +148,7 @@ def forgot():
 
 @app.route('/disconnect', methods=['GET'])
 def disconnect():
-    session.pop('is_logged', None)
+    session['is_logged'] = False
     session.pop('token', None)
 
     return redirect(url_for('welcome'))
