@@ -52,7 +52,7 @@ def getMapData():
 
 @app.route('/welcome')
 def welcome():
-    return 'oof'
+    return render_template('welcome/welcome.html')
 
 def check_connexion():
     if session.get('is_logged'):
