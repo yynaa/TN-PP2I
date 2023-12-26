@@ -3,6 +3,7 @@ from math import*
 
 from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews
 from error import*
+from werkzeug.security import check_password_hash
 
 # -------------------------------------------------------------------
 
@@ -302,7 +303,7 @@ def check_password(db_path:str,login:str,given_password:str)->list:
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
         return [False, no_such_login_error.get_message()]
-    if given_password == user_data['password']:
+    if check_password_hash(user_data['password'], given_password):
         return [True]
     return [False, wrong_password_error.get_message()]
 
