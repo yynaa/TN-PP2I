@@ -50,15 +50,86 @@ def getMapData():
 ############################################################################
 # LOGIN PART
 
-@app.route('/welcome')
+@app.route('/welcome', methods=['GET'])
 def welcome():
     return render_template('welcome/welcome.html', is_logged=session.get('is_logged'))
+
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+    is_co = session['is_logged']
+
+    if is_co:
+        decoded = jwt.decode(session['token'], app.config['SECRET_KEY'], algorithms='HS256')
+        datas = fetch_Data_user("backend/db/database.db", decoded['login'])
+        
+        if request.method == 'GET':
+            return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = "", login_issue = "", user_good = "", user_issue = "")
+        else:
+            form = request.form
+
+            if 'mail' in form:
+                new_mail = form.get('mail')
+                switch = update_mail('backend/db/database.db', datas['login'], new_mail)
+
+                if switch[0]:
+                    decoded['email'] = new_mail
+                    datas = fetch_Data_user("backend/db/database.db", decoded['login'])
+                    session['token'] = jwt.encode(decoded, app.config['SECRET_KEY'])
+
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = switch[0], mail_issue = "", login_good = "", login_issue = "", user_good = "", user_issue = "")
+                else:
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = switch[0], mail_issue = switch[1], login_good = "", login_issue = "", user_good = "", user_issue = "")
+            
+            if 'login' in form:
+                new_login = form.get('login')
+                switch = update_login('backend/db/database.db', datas['login'], new_login)
+
+                if switch[0]:
+                    decoded['login'] = new_login
+                    datas = fetch_Data_user("backend/db/database.db", decoded['login'])
+                    session['token'] = jwt.encode(decoded, app.config['SECRET_KEY'])
+
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = switch[0], login_issue = "", user_good = "", user_issue = "")
+                else:
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = switch[0], login_issue = switch[1], user_good = "", user_issue = "")
+            
+            if 'user' in form:
+                new_user = form.get('user')
+                switch = update_display_name('backend/db/database.db', datas['login'], new_user)
+
+                if switch[0]:
+                    decoded['display_name'] = new_user
+                    datas = fetch_Data_user("backend/db/database.db", decoded['login'])
+                    session['token'] = jwt.encode(decoded, app.config['SECRET_KEY'])
+
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = "", login_issue = "", user_good = switch[0], user_issue = "")
+                else:
+                    return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = "", login_issue = "", user_good = switch[0], user_issue = switch[1])
+            
+
+
+                
+
+    else:
+        return render_template('welcome/profile.html', is_logged=is_co, login="", mail="", password="", creation_date="", username="", modif = "")
+
+@app.route("/profile/<string:modif>", methods=['GET'])
+def profile_with_modif(modif: str):
+    is_co = session['is_logged']
+
+    if is_co:
+        decoded = jwt.decode(session['token'], app.config['SECRET_KEY'], algorithms='HS256')
+        datas = fetch_Data_user("backend/db/database.db", decoded['login'])
+
+        return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = modif)
+    else:
+        return render_template('welcome/profile.html', is_logged=is_co, login="", mail="", password="", creation_date="", username="", modif = modif)
 
 def check_connexion():
     if session.get('is_logged'):
         return redirect('/welcome')
 
-
+    
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     red = check_connexion()
@@ -128,23 +199,26 @@ def register():
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
-    red = check_connexion()
-    if red:
-        return red
+    if session['is_logged']:
+        if request.method == 'GET':
+            return render_template("welcome/forgot_mail.html", is_reseting=False, password_issue="")
+        else:
+            infos = request.form
+            decoded = jwt.decode(session['token'], app.config['SECRET_KEY'], algorithms='HS256')
+            login = decoded['login']
+            mdp = generate_password_hash(infos.get("mdp"))
 
-    if request.method == 'GET':
-        return render_template("welcome/forgot_mail.html", is_reseting=False, password_issue="")
+            is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
 
-    infos = request.form
-    login = infos.get("login")
-    mdp = generate_password_hash(infos.get("mdp"))
+            if is_reseting[0]:
+                decoded['password'] = mdp
+                session['token'] = jwt.encode(decoded, app.config['SECRET_KEY'])
 
-    is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
-
-    if is_reseting[0]:
-        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
+                return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")
+            else:
+                return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
     else:
-        return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue=is_reseting[1])
+        return redirect(url_for('login'))
 
 @app.route('/disconnect', methods=['GET'])
 def disconnect():

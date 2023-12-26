@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-image: url(home.jpg);
+    background-size: cover;
+}
+
+.frame {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgb(255, 255, 255, 0.5);
+}
+
+.no-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgb(255, 255, 255, 0.5);
+}
+
+.no-content {
+    font-weight: bold;
+}
+
+.no-content a:hover{
+    text-decoration: underline;
+}
+
+.frame a:hover {
+    text-decoration: underline;
+}
+
+.frame div {
+    padding-bottom: 30px;
+}
+
+.frame p {
+    font-weight: bold;
+}
+
+.frame .title p {
+    font-size: larger;
+}
+
+.frame .creation_date {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.no-content {
+    position: absolute;
+}
