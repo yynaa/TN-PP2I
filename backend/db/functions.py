@@ -3,6 +3,7 @@ from math import*
 
 from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews
 from error import*
+from werkzeug.security import check_password_hash
 
 # -------------------------------------------------------------------
 
@@ -279,7 +280,7 @@ def create_User(db_path:str,login:str,email:str,password:str,display_name:str,ye
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    cursor.execute("INSERT INTO Users VALUES ();", (login,email,password,display_name,date))
+    cursor.execute("INSERT INTO Users VALUES (?, ?, ?, ?, ?);", (login,email,password,display_name,date))
 
     connexion.commit()
     connexion.close()
@@ -302,7 +303,7 @@ def check_password(db_path:str,login:str,given_password:str)->list:
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
         return [False, no_such_login_error.get_message()]
-    if given_password == user_data['password']:
+    if check_password_hash(user_data['password'], given_password):
         return [True]
     return [False, wrong_password_error.get_message()]
 
@@ -329,6 +330,97 @@ def update_password(db_path:str,login:str,newPassword:str)->list:
     cursor = connexion.cursor()
 
     cursor.execute("UPDATE Users SET password = ? WHERE login = ?;", (newPassword,login))
+
+    connexion.commit()
+    connexion.close()
+
+    return [True]
+
+def update_login(db_path:str,login:str,newLogin:str)->list:
+    """Updates the login of the given login. The new login must be different
+        from the old one and not already used.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User.
+        newLogin (str): New login of the User (must be different from the old one and not used).
+
+    Returns:
+        list: [bool , str if needed]: Did the function successfully swapped login? If not, why?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    login_existence = not(fetch_Data_user(db_path, newLogin) == {})
+
+    if user_data == {}:
+        return [False, no_such_login_error.get_message()]
+    if newLogin == user_data['login']:
+        return [False, "Le login est le même que précédemment"]
+    if login_existence:
+        return [False, "Le nouveau login est déjà utilisé"]
+
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("UPDATE Users SET login = ? WHERE login = ?;", (newLogin, login))
+
+    connexion.commit()
+    connexion.close()
+
+    return [True]
+
+def update_mail(db_path:str,login:str,newMail:str)->list:
+    """Updates the mail of the given login. The new mail must be different
+        from the old one.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User.
+        newMail (str): New email of the User (must be different from the old one).
+
+    Returns:
+        list: [bool , str if needed]: Did the function successfully swapped the mail? If not, why?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    if user_data == {}:
+        return [False, no_such_login_error.get_message()]
+    if newMail == user_data['email']:
+        return [False, "L'addresse-email est la même que précédemment"]
+
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("UPDATE Users SET email = ? WHERE login = ?;", (newMail,login))
+
+    connexion.commit()
+    connexion.close()
+
+    return [True]
+
+def update_display_name(db_path:str,login:str,newDN:str)->list:
+    """Updates the display name of the given login. The new display name must be different
+        from the old one.
+
+    Args:
+        db_path (str): Path of the Database.
+        login (str): Login of the User.
+        newDN (str): New display name of the User (must be different from the old one).
+
+    Returns:
+        list: [bool , str if needed]: Did the function successfully swapped the mail? If not, why?
+    """
+
+    user_data = fetch_Data_user(db_path,login)
+    if user_data == {}:
+        return [False, no_such_login_error.get_message()]
+    if newDN == user_data['display_name']:
+        return [False, "Le nom d'utilisateur est le même que précédemment"]
+
+    connexion = sqlite3.connect(db_path)
+    cursor = connexion.cursor()
+
+    cursor.execute("UPDATE Users SET display_name = ? WHERE login = ?;", (newDN,login))
 
     connexion.commit()
     connexion.close()

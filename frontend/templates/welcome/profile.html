@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheep</title>
+    <link rel="shortcut icon" href="{{url_for('static', filename='welcome/handi_logo.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='welcome/profile.css')}}">
+</head>
+<body>
+    <header>
+    {% if is_logged %}
+    <div class="frame">
+        <div class="title">
+            <p>Nom d'utilisateur: {{ username }}</p>
+            {% if modif == "" %}
+            <a href="{{ url_for('profile_with_modif', modif='user') }}">Modifier</a>
+            
+            {% if user_good %}
+            <p style="color: green;">Nom d'utilisateur modifié avec succès!</p>
+            {% elif user_issue|length > 0 %}
+            <p style="color: red;">{{ user_issue }}</p>
+            {% endif %}
+            
+            {% elif modif == "user" %}
+            <form action="/profile" method="post">
+                <input type="text" name="user" placeholder="Nouveau nom d'utilisateur">
+                <input type="submit" value="Valider">
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="content">
+            <p>Adresse e-mail: {{ mail }} </p>
+            {% if modif == "" %}
+            <a href="{{ url_for('profile_with_modif', modif='mail') }}">Modifier</a>
+            
+            {% if mail_good %}
+            <p style="color: green;">Adresse-email modifiée avec succès!</p>
+            {% elif mail_issue|length > 0 %}
+            <p style="color: red;">{{ mail_issue }}</p>
+            {% endif %}
+            
+            {% elif modif == "mail" %}
+            <form action="/profile" method="post">
+                <input type="text" name="mail" placeholder="Nouvelle adresse-email">
+                <input type="submit" value="Valider">
+            </form>
+            {% endif %}
+            
+            
+            <br>
+            <br>
+            <p>Login: {{ login }} </p>
+            {% if modif == "" %}
+            <a href="{{ url_for('profile_with_modif', modif='login') }}">Modifier</a>
+            
+            {% if login_good %}
+            <p style="color: green;">Login modifié avec succès!</p>
+            {% elif login_issue|length > 0 %}
+            <p style="color: red;">{{ login_issue }}</p>
+            {% endif %}
+            
+            {% elif modif == "login" %}
+            <form action="/profile" method="post">
+                <input type="text" name="login" placeholder="Nouveau login">
+                <input type="submit" value="Valider">
+            </form>
+            {% endif %}
+
+            <br>
+            <br>
+            <p>Mot de passe</p>
+            <a href="{{url_for('forgot')}}">Modifier</a>
+        </div>
+
+        <br>
+        <p class="creation_date">Compte créé le : {{ creation_date }} </p>
+    </div>
+    {% else %}
+    <div class="no-content">
+        <p>Vous n'êtes pas connecté</p>
+        <br>
+        <a href="{{url_for('login')}}"> Connectez-vous </a>
+    </div>
+    {% endif %}
+    </header>
+
+
+
+</body>
+
+</html>

@@ -24,16 +24,11 @@
                 </p>
                 {% else %}
                 <p style="color: black;">
-                    Insérez votre login et votre nouveau mot de passe.
+                    Insérez votre nouveau mot de passe.
                 </p>
                 <br>
                 <div class="inputbox">
-                    <input id="mail" name="login" type="text" placeholder="Identifiant" required>
-                    <img class="logoguy" src="{{url_for('static', filename='welcome/user_logo.png')}}" alt="Image_id">
-                </div>
-                <br>
-                <div class="inputbox">
-                    <input id="mdp" name="mdp" type="text" placeholder="Mot de passe" required>
+                    <input id="mdp" name="mdp" type="password" placeholder="Mot de passe" required>
                     <img class="logolock" src="{{url_for('static', filename='welcome/padlock_logo.png')}}" alt="Image_mdp">
                 </div>
                 <br>
