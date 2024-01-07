@@ -161,3 +161,4 @@ cython_debug/
 
 test.py
 onyx_tests.py
+ErrorLog.txt
