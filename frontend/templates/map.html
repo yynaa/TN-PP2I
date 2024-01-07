@@ -24,10 +24,23 @@
                         <div id="db-buildingdescription">Placeholder Description</div>
                         <div id="db-buildingaddress">Placeholder Address</div> 
                     </div>
+                    {% if (is_co) %}
+                    <div class="popup-headers">Ajouter un commentaire</div>
                     <form>
                         <input type="text" name="comment_content" id="comment_content" placeholder="Tapez un commentaire ici...">
+                        <input type="range" name="comment_rating" id="comment_rating" min="0" max="10" value="5">
                         <input type="submit" value="Envoyer">
                     </form>
+                    {% else %}
+                    <div>Vous devez être connecté pour poster un commentaire.</div>
+                    {% endif %}
+                    <h1 class="popup-headers">Commentaires</h1>
+                    <div class="popup-comment">
+                        <span class="popup-comment-author">moi</span> - <span class="popup-comment-rating">5</span><br/>
+                        <div class="popup-comment-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies ultricies, nunc nunc aliquam nunc, vitae aliquam nunc nunc eget nisl. Donec euismod, nisl eget ultricies ultricies, nunc nunc aliquam nunc, vitae aliquam nunc nunc eget nisl.</div>
+                    </div>
+
+                    <br/><br/>
                 </div>
             </div>
         </div>

@@ -53,8 +53,13 @@ body {
 
 }
 
+#popup {
+    overflow: hidden;
+}
+
 #popup-content {
-    width: auto;
+    width: 100vw;
+    overflow-y: scroll;
 }
 
 #popup-close {
@@ -68,8 +73,10 @@ body {
 #popup-building-info {
     display: flex;
     flex-direction: column;
+    width: 90vw;
     height: 47.5vh;
     flex-wrap: wrap;
+    align-content: flex-start;
 }
 
 #db-buildingimage {
@@ -95,4 +102,18 @@ body {
     font-size: 2vh;
     font-style: italic;
     color: #333;
+}
+
+.popup-comment-author {
+    font-weight: 700;
+}
+
+.popup-comment-content {
+    font-weight: 700;
+    font-style: italic;
+}
+
+.popup-headers {
+    font-weight: 700;
+    font-size: 3vh;
 }

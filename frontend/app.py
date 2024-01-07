@@ -22,7 +22,8 @@ def mapLoader():
     """
     Loads the map page
     """
-    return render_template("map.html")
+    is_co = session['is_logged']
+    return render_template("map.html", is_co=is_co)
 
 ############################################################################
 # LOGIN PART
