@@ -56,7 +56,7 @@ def welcome():
 
 @app.route("/profile", methods=['GET', 'POST'])
 def profile():
-    is_co = session['is_logged']
+    is_co = session.get('is_logged')
 
     if is_co:
         decoded = jwt.decode(session['token'], app.config['SECRET_KEY'], algorithms='HS256')
@@ -206,12 +206,11 @@ def forgot():
             infos = request.form
             decoded = jwt.decode(session['token'], app.config['SECRET_KEY'], algorithms='HS256')
             login = decoded['login']
-            mdp = generate_password_hash(infos.get("mdp"))
+            mdp = infos.get("mdp")
 
             is_reseting = update_password("backend/db/database.db", login=login, newPassword=mdp)
 
             if is_reseting[0]:
-                decoded['password'] = mdp
                 session['token'] = jwt.encode(decoded, app.config['SECRET_KEY'])
 
                 return render_template("welcome/forgot_mail.html", is_reseting=is_reseting[0], password_issue="")

@@ -17,9 +17,9 @@
                 <li><a href="#">Paramètres</a></li>
                 <li>
                     {% if is_logged %}
-                    <a href="{{url_for('disconnect')}}">Connexion/Déconnexion</a>
+                    <a href="{{url_for('disconnect')}}">Déconnexion</a>
                     {% else %}
-                    <a href="{{url_for('login')}}">Connexion/Déconnexion</a>
+                    <a href="{{url_for('login')}}">Connexion</a>
                     {% endif %}
                 </li>
             </ul>

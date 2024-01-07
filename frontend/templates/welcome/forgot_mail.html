@@ -17,10 +17,22 @@
                 {% if is_reseting %}
                 <p style="color: green;">
                     Mot de passe modifié avec succès
+
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/welcome';
+                        }, 2500);
+                    </script>
                 </p>
                 {% elif password_issue|length > 0 %}
                 <p style="color: red;">
                     {{ password_issue }}
+
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/forgot';
+                        }, 2500);
+                    </script>
                 </p>
                 {% else %}
                 <p style="color: black;">
@@ -36,6 +48,9 @@
                 {% endif %}
             </form>
         </section>
+        <div class="home">
+            <a href="{{url_for('welcome')}}">Retour au menu principal</a>
+        </div>
     </header>
 </body>
 </html>

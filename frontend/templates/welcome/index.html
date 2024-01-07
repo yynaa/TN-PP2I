@@ -17,10 +17,22 @@
                 {% if is_logged %}
                 <p style="color: green;">
                     Vous êtes connecté!
+
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/welcome';
+                        }, 2500);
+                    </script>
                 </p>
                 {% elif log_issue|length > 0 %}
                 <p style="color: red;">
                     {{ log_issue }}
+
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/login';
+                        }, 2500);
+                    </script>
                 </p>
                 {% else %}
                 <div class="inputbox">
@@ -46,6 +58,9 @@
                 {% endif %}
             </form>
         </section>
+        <div class="home">
+            <a href="{{url_for('welcome')}}">Retour au menu principal</a>
+        </div>
     </header>
 </body>
 </html>

@@ -3,7 +3,7 @@ from math import*
 
 from backend.db.core import columns_names_buildings, columns_names_users,columns_names_reviews
 from error import*
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # -------------------------------------------------------------------
 
@@ -323,13 +323,13 @@ def update_password(db_path:str,login:str,newPassword:str)->list:
     user_data = fetch_Data_user(db_path,login)
     if user_data == {}:
         return [False, no_such_login_error.get_message()]
-    if newPassword == user_data['password']:
+    if check_password_hash(user_data['password'], newPassword):
         return [False, same_password_as_before_error.get_message()]
 
     connexion = sqlite3.connect(db_path)
     cursor = connexion.cursor()
 
-    cursor.execute("UPDATE Users SET password = ? WHERE login = ?;", (newPassword,login))
+    cursor.execute("UPDATE Users SET password = ? WHERE login = ?;", (generate_password_hash(newPassword),login))
 
     connexion.commit()
     connexion.close()
