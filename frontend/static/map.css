@@ -35,6 +35,7 @@ body {
     width: 100vw;
     height: 0vh;
     border-top: 3px solid #111;
+    overflow: scroll;
 }
 
 .popup-active {
@@ -45,10 +46,15 @@ body {
 #popup-controls {
     display: flex;
     flex-direction: row;
-    height: 47.5vh;
+    /* height: 47.5vh; */
+    height:auto;
     width: 3vw;
     background: linear-gradient(to left, #ffffff, #c0c0c0);
 
+}
+
+#popup-content {
+    width: auto;
 }
 
 #popup-close {
