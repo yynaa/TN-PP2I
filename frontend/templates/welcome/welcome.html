@@ -14,7 +14,7 @@
             <ul>
                 <li><a href="{{ url_for('profile') }}">Profil</a></li>
                 <li><a href="{{url_for('mapLoader')}}">Rechercher</a></li>
-                <li><a href="#">Paramètres</a></li>
+                <li><a href="{{url_for('about')}}">A propos</a></li>
                 <li>
                     {% if is_logged %}
                     <a href="{{url_for('disconnect')}}">Déconnexion</a>
