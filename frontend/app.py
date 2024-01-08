@@ -11,10 +11,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'af6f328e28ed48fb89ee914c1acd9b4c'
 app.permanent_session_lifetime = timedelta(weeks=1)
 
-@app.route('/')
-def root():
-    return '<h1>ULTRA MEGA SUPER WHEELCHAIR MAN SIMULATOR 2019</h1>'
-
 @app.route('/map')
 def mapLoader():
     """
@@ -48,9 +44,9 @@ def getMapData():
     return []
 
 ############################################################################
-# LOGIN PART
+# USER INTERFACE
 
-@app.route('/welcome', methods=['GET'])
+@app.route('/', methods=['GET'])
 def welcome():
     return render_template('welcome/welcome.html', is_logged=session.get('is_logged'))
 
@@ -105,11 +101,6 @@ def profile():
                     return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = "", login_issue = "", user_good = switch[0], user_issue = "")
                 else:
                     return render_template('welcome/profile.html', is_logged=is_co, login=datas['login'], mail=datas['email'], password=datas['password'], creation_date=datas['creation_date'], username=datas['display_name'], modif = "", mail_good = "", mail_issue = "", login_good = "", login_issue = "", user_good = switch[0], user_issue = switch[1])
-            
-
-
-                
-
     else:
         return render_template('welcome/profile.html', is_logged=is_co, login="", mail="", password="", creation_date="", username="", modif = "")
 
@@ -125,10 +116,17 @@ def profile_with_modif(modif: str):
     else:
         return render_template('welcome/profile.html', is_logged=is_co, login="", mail="", password="", creation_date="", username="", modif = modif)
 
+@app.route("/about", methods=['GET'])
+def about():
+    return render_template('welcome/about.html')
+
 def check_connexion():
     if session.get('is_logged'):
         return redirect('/welcome')
 
+
+#########################################################################################
+# LOGIN PART
     
 @app.route('/login', methods = ['GET', 'POST'])
 def login():

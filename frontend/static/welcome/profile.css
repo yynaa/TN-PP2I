@@ -28,7 +28,7 @@ header {
     border: 3px solid black;
     border-radius: 10px;
     padding: 20px;
-    background-color: rgb(255, 255, 255, 0.5);
+    background-color: rgb(255, 255, 255, 0.75);
 }
 
 .no-content {
@@ -92,8 +92,46 @@ header {
     font-size: large;
     color: white;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .home a:hover {
     text-decoration: underline;
 }
+
+.frame .what {
+    margin: 7px;
+}
+
+.frame .what .w_title {
+    font-size: large;
+    text-decoration: underline;
+}
+
+.frame .goal {
+    margin: 7px;
+}
+
+.frame .goal .g_title {
+    font-size: large;
+    text-decoration: underline;
+}
+
+.frame .us {
+    margin: 7px;
+}
+
+.frame .us .u_title {
+    font-size: large;
+    text-decoration: underline;
+}
+
+.frame .coos {
+    margin: 7px;
+}
+
+.frame .coos .c_title {
+    font-size: large;
+    text-decoration: underline;
+}
+
